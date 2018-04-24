@@ -12,17 +12,14 @@ defmodule WordyTest do
     assert Wordy.answer("What is 1 plus 1?") == 2
   end
 
-  @tag :pending
   test "more addition" do
     assert Wordy.answer("What is 53 plus 2?") == 55
   end
 
-  @tag :pending
   test "addition with negative numbers" do
     assert Wordy.answer("What is -1 plus -10?") == -11
   end
 
-  @tag :pending
   test "large addition" do
     assert Wordy.answer("What is 123 plus 45678?") == 45801
   end
