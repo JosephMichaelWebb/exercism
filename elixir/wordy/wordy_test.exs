@@ -87,4 +87,18 @@ defmodule WordyTest do
       Wordy.answer("Who is the President of the United States?")
     end
   end
+
+  describe "additional tests" do
+    test "returns an error when the first operand is not parsable" do
+      assert Wordy.answer("What is X plus 1?") == {:error, :failed_to_parse_operand, "X"}
+    end
+
+    test "returns an error when the second operand is not parsable" do
+      assert Wordy.answer("What is 1 plus Y?") == {:error, :failed_to_parse_operand, "Y"}
+    end
+
+    test "returns an error when the operator is not parsable" do
+      assert Wordy.answer("What is 1 with 1?") == {:error, :failed_to_parse_operator, "with"}
+    end
+  end
 end
