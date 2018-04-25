@@ -32,7 +32,6 @@ defmodule WordyTest do
     assert Wordy.answer("What is -3 multiplied by 25?") == -75
   end
 
-  @tag :pending
   test "division" do
     assert Wordy.answer("What is 33 divided by -3?") == -11
   end

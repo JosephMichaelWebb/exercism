@@ -72,6 +72,8 @@ defmodule Operator do
   def parse("plus"), do: {:ok, :+}
   def parse("minus"), do: {:ok, :-}
   def parse("multiplied"), do: {:ok, :*}
+  def parse("divided"), do: {:ok, :div}
+
   def parse(operator) do
     {:error, :failed_to_parse_operator, operator}
   end
