@@ -21,6 +21,7 @@ defmodule Question do
     question
     |> String.trim_leading("What is ")
     |> String.trim_trailing("?")
+    |> String.replace("by ", "")
   end
 end
 
@@ -41,8 +42,8 @@ defmodule Operation do
     end
   end
 
-  def execute(%Operation{operator: :+} = operation) do
-    apply(Kernel, :+, operation.operands)
+  def execute(%Operation{operator: operator} = operation) do
+    apply(Kernel, operator, operation.operands)
   end
 
   defp parse_single_binary_operation(operand_1, operator, operand_2) do
@@ -69,7 +70,8 @@ end
 
 defmodule Operator do
   def parse("plus"), do: {:ok, :+}
-
+  def parse("minus"), do: {:ok, :-}
+  def parse("multiplied"), do: {:ok, :*}
   def parse(operator) do
     {:error, :failed_to_parse_operator, operator}
   end

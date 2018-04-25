@@ -24,12 +24,10 @@ defmodule WordyTest do
     assert Wordy.answer("What is 123 plus 45678?") == 45801
   end
 
-  @tag :pending
   test "subtraction" do
     assert Wordy.answer("What is 4 minus -12?") == 16
   end
 
-  @tag :pending
   test "multiplication" do
     assert Wordy.answer("What is -3 multiplied by 25?") == -75
   end
