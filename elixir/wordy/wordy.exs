@@ -33,16 +33,7 @@ defmodule Operation do
   def parse(operation) do
     operation
     |> String.split()
-    |> case do
-      [operand_1, operator, operand_2] ->
-        parse_single_binary_operation(operand_1, operator, operand_2)
-
-      [operand_1, operator_1, operand_2, operator_2, operand_3] ->
-        parse_two_binary_operation(operand_1, operator_1, operand_2, operator_2, operand_3)
-
-      _ ->
-        {:error, :failed_to_parse}
-    end
+    |> parse_operations()
   end
 
   def execute(
@@ -56,38 +47,31 @@ defmodule Operation do
   def execute(%Operation{operator: operator} = operation) do
     apply(Kernel, operator, operation.operands)
   end
-
-  defp parse_single_binary_operation(operand_1, operator, operand_2) do
-    with {:ok, operand_1} <- Operand.parse(operand_1),
-         {:ok, operator} <- Operator.parse(operator),
-         {:ok, operand_2} <- Operand.parse(operand_2) do
-      {:ok,
-       %Operation{
-         operator: operator,
-         operands: [operand_1, operand_2]
-       }}
+  
+  defp parse_operations(operations, operation_struct \\ %Operation{operator: nil, operands: []})
+  defp parse_operations([operand, operator |rest] = operations, operation_struct) do
+    with {:ok, parsed_operand} <- Operand.parse(operand),
+         {:ok, parsed_operator} <- Operator.parse(operator)
+    do
+      if operation_struct.operator && length(operation_struct.operands)==1 do
+        new_operation_struct = %{operation_struct | operands: operation_struct.operands ++ [parsed_operand]}
+        new_operand = execute(new_operation_struct)
+        parse_operations(rest, %Operation{operands: [new_operand], operator: parsed_operator})
+      else
+        new_operation_struct = %{operation_struct | operands: operation_struct.operands ++ [parsed_operand], operator: parsed_operator}
+        parse_operations(rest, new_operation_struct)
+      end
+    else
+      _ -> raise ArgumentError
     end
   end
-
-  defp parse_two_binary_operation(operand_1, operator_1, operand_2, operator_2, operand_3) do
-    with {:ok, operand_1} <- Operand.parse(operand_1),
-         {:ok, operator_1} <- Operator.parse(operator_1),
-         {:ok, operand_2} <- Operand.parse(operand_2),
-         {:ok, operator_2} <- Operator.parse(operator_2),
-         {:ok, operand_3} <- Operand.parse(operand_3) do
-      {:ok,
-       %Operation{
-         operator: operator_2,
-         operands: [
-           %Operation{
-             operator: operator_1,
-             operands: [operand_1, operand_2]
-           },
-           operand_3
-         ]
-       }}
+  defp parse_operations([operand], operation_struct) do
+    case Operand.parse(operand) do
+      {:ok, verified} -> 
+        {:ok, %{operation_struct | operands: operation_struct.operands ++ [verified]}}
+      anything -> anything
     end
-  end
+  end 
 end
 
 defmodule Operand do
