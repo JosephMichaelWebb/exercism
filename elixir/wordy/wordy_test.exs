@@ -36,37 +36,30 @@ defmodule WordyTest do
     assert Wordy.answer("What is 33 divided by -3?") == -11
   end
 
-  @tag :pending
   test "multiple additions" do
     assert Wordy.answer("What is 1 plus 1 plus 1?") == 3
   end
 
-  @tag :pending
   test "addition and subtraction" do
     assert Wordy.answer("What is 1 plus 5 minus -2?") == 8
   end
 
-  @tag :pending
   test "multiple subtraction" do
     assert Wordy.answer("What is 20 minus 4 minus 13?") == 3
   end
 
-  @tag :pending
   test "subtraction then addition" do
     assert Wordy.answer("What is 17 minus 6 plus 3?") == 14
   end
 
-  @tag :pending
   test "multiple multiplication" do
     assert Wordy.answer("What is 2 multiplied by -2 multiplied by 3?") == -12
   end
 
-  @tag :pending
   test "addition and multiplication" do
     assert Wordy.answer("What is -3 plus 7 multiplied by -2?") == -8
   end
 
-  @tag :pending
   test "multiple division" do
     assert Wordy.answer("What is -12 divided by 2 divided by -3?") == 2
   end
