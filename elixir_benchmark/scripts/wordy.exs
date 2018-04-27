@@ -1,8 +1,24 @@
 Code.load_file("wordy.exs", "../elixir/wordy")
-single_addition = "What is 1 plus 1?"
-double_division = "What is -12 divided by 2 divided by -3?"
+Code.load_file("wordy_2.exs", "../elixir/wordy")
+require Integer
+
+operation = fn -> Enum.random(["divided by", "multiplied by", "minus", "plus"]) end
+operand = fn -> Enum.random(1..1_000_000) end
+
+big_expression =
+  for x <- 1..100_001 do
+    if Integer.is_even(x) do
+      operation.()
+    else
+      operand.()
+    end
+  end
+
+big_expression = "What is #{Enum.join(big_expression, " ")}?"
+
+Wordy.answer(big_expression)
 
 Benchee.run(%{
-  "wordy_single_addition" => fn -> Wordy.answer(single_addition) end,
-  "wordy_double_division" => fn -> Wordy.answer(double_division) end
+  "wordy_big_expression" => fn -> Wordy.answer(big_expression) end,
+  "wordy_2_big_expression" => fn -> Wordy2.answer(big_expression) end
 })
