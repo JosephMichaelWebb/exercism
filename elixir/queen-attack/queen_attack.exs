@@ -8,16 +8,33 @@ defmodule Queens do
   @spec new() :: Queens.t()
   @spec new({integer, integer}, {integer, integer}) :: Queens.t()
 
+  def new(queen, queen), do: raise(ArgumentError)
+
   def new(white \\ {0, 3}, black \\ {7, 3}) do
-    %__MODULE__{white: white, black: black}
+    %Queens{white: white, black: black}
   end
 
   @doc """
   Gives a string reprentation of the board with
   white and black queen locations shown
   """
+  @blank "_"
   @spec to_string(Queens.t()) :: String.t()
   def to_string(queens) do
+    {row, column} = queens.white
+    white_index = row * 8 + column
+    {row, column} = queens.black
+    black_index = row * 8 + column
+
+    0..63
+    |> Enum.map(fn
+      ^white_index -> "W"
+      ^black_index -> "B"
+      _index -> "_"
+    end)
+    |> Enum.chunk_every(8)
+    |> Enum.map(fn row -> Enum.join(row, " ") end)
+    |> Enum.join("\n")
   end
 
   @doc """
