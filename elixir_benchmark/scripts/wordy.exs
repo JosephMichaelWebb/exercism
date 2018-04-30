@@ -1,5 +1,4 @@
 Code.load_file("wordy.exs", "../elixir/wordy")
-Code.load_file("wordy_2.exs", "../elixir/wordy")
 require Integer
 
 operation = fn -> Enum.random(["divided by", "multiplied by", "minus", "plus"]) end
@@ -19,6 +18,5 @@ big_expression = "What is #{Enum.join(big_expression, " ")}?"
 Wordy.answer(big_expression)
 
 Benchee.run(%{
-  "wordy_big_expression" => fn -> Wordy.answer(big_expression) end,
-  "wordy_2_big_expression" => fn -> Wordy2.answer(big_expression) end
+  "wordy_big_expression" => fn -> Wordy.answer(big_expression) end
 })

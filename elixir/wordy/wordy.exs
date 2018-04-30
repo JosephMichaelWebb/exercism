@@ -2,23 +2,21 @@ defmodule Wordy do
   @doc """
   Calculate the math problem in the sentence.
   """
+  @skips ["What", "is", " ", "by", "?"]
+  @ops %{"plus" => &+/2, "minus" => &-/2, "multiplied" => &*/2, "divided" => &div/2}
   @spec answer(String.t()) :: integer
-  def answer(question) do
-    question
-    |> String.trim_leading("What is ")
-    |> String.trim_trailing("?")
-    |> String.split()
-    |> Enum.flat_map(&parse_token/1)
-    |> solve()
+  def answer(string, acc \\ [])
+  def answer("", [result]), do: result
+  def answer(string, [arg2, op, arg1]), do: answer(string, [op.(arg1, arg2)])
+  for skip <- @skips, do: def(answer(unquote(skip) <> rest, acc), do: answer(rest, acc))
+
+  for op <- Map.keys(@ops),
+      do: def(answer(unquote(op) <> rest, acc), do: answer(rest, [unquote(@ops[op]) | acc]))
+
+  def answer(string, acc) do
+    {arg, rest} = parse_integer(string)
+    answer(rest, [arg | acc])
   end
 
-  defp parse_token("by"), do: []
-  defp parse_token("plus"), do: [&Kernel.+/2]
-  defp parse_token("minus"), do: [&Kernel.-/2]
-  defp parse_token("multiplied"), do: [&Kernel.*/2]
-  defp parse_token("divided"), do: [&Kernel.div/2]
-  defp parse_token(token), do: [String.to_integer(token)]
-
-  defp solve([result]), do: result
-  defp solve([int_1, op, int_2 | tokens]), do: solve([op.(int_1, int_2) | tokens])
+  defp parse_integer(string), do: with(:error <- Integer.parse(string), do: raise(ArgumentError))
 end
