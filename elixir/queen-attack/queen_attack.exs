@@ -8,11 +8,9 @@ defmodule Queens do
   @spec new() :: Queens.t()
   @spec new({integer, integer}, {integer, integer}) :: Queens.t()
 
+  def new(white \\ {0, 3}, black \\ {7, 3})
   def new(queen, queen), do: raise(ArgumentError)
-
-  def new(white \\ {0, 3}, black \\ {7, 3}) do
-    %Queens{white: white, black: black}
-  end
+  def new(white, black), do: %Queens{white: white, black: black}
 
   @doc """
   Gives a string reprentation of the board with
@@ -23,8 +21,7 @@ defmodule Queens do
     white_index = index(white)
     black_index = index(black)
 
-    0..127
-    |> Enum.reduce("", fn
+    Enum.reduce(0..127, "", fn
       127, acc -> acc
       i, acc when rem(i + 1, 16) == 0 -> acc <> "\n"
       i, acc when rem(i, 2) == 1 -> acc <> " "
@@ -33,6 +30,8 @@ defmodule Queens do
       _i, acc -> acc <> "_"
     end)
   end
+
+  defp index({row, column}), do: row * 16 + column * 2
 
   @doc """
   Checks if the queens can attack each other
@@ -43,14 +42,12 @@ defmodule Queens do
 
   for n <- 1..7 do
     def can_attack?(%{black: {b_row, b_col}, white: {w_row, w_col}})
-        when (w_col == b_col + unquote(n) and w_row == b_row + unquote(n)) or
-               (b_col == w_col + unquote(n) and b_row == w_row + unquote(n)) or
-               (b_col == w_col - unquote(n) and b_row == w_row + unquote(n)) or
-               (b_col == w_col + unquote(n) and b_row == w_row - unquote(n)),
+        when w_col == b_col + unquote(n) and w_row == b_row + unquote(n)
+        when b_col == w_col + unquote(n) and b_row == w_row + unquote(n)
+        when b_col == w_col - unquote(n) and b_row == w_row + unquote(n)
+        when b_col == w_col + unquote(n) and b_row == w_row - unquote(n),
         do: true
   end
 
   def can_attack?(_queens), do: false
-
-  defp index({row, column}), do: row * 16 + column * 2
 end
