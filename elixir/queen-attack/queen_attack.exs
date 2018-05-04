@@ -1,6 +1,6 @@
 defmodule Queens do
   @type t :: %Queens{black: {integer, integer}, white: {integer, integer}}
-  defstruct black: nil, white: nil
+  defstruct black: {7, 3}, white: {0, 3}
 
   @doc """
   Creates a new set of Queens
@@ -8,7 +8,7 @@ defmodule Queens do
   @spec new() :: Queens.t()
   @spec new({integer, integer}, {integer, integer}) :: Queens.t()
 
-  def new(white \\ {0, 3}, black \\ {7, 3})
+  def new(), do: %Queens{}
   def new(queen, queen), do: raise(ArgumentError)
   def new(white, black), do: %Queens{white: white, black: black}
 
